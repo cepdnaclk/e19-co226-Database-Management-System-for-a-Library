@@ -1,6 +1,5 @@
 package com.library.library.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.validator.constraints.Length;
 
 import jakarta.persistence.*;
