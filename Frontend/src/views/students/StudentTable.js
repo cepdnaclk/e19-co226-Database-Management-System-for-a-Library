@@ -16,9 +16,17 @@ export default class StudentsTable extends React.Component{
     }
     
     refreshList() {
-        fetch(variables.API_URL+'Students')
+        const storedToken = JSON.parse(localStorage.getItem('token'));
+        fetch(variables.API_URL+'Students', {
+            headers: {
+                'Authorization': `Bearer ${storedToken}` // Include the token in the headers
+            }
+        })
         .then(response=>response.json())
         .then(data=>{this.setState({students:data});
+        }).catch(error => {
+            console.error('Error fetching books:', error);
+            // You can display an error message to the user if needed
         });
     }
 
@@ -75,6 +83,7 @@ export default class StudentsTable extends React.Component{
     }
 
     createClick() {
+        const storedToken = JSON.parse(localStorage.getItem('token'));
         // Check if any required fields are missing
         if (!this.state.nic||!this.state.role || !this.state.name || !this.state.email || !this.state.contact || !this.state.gender) {
           alert('Please fill in all required fields.');
@@ -86,7 +95,8 @@ export default class StudentsTable extends React.Component{
           method: 'POST',
           headers: {
             'Accept': 'application/json',
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${storedToken}` // Include the token in the headers
           },
           body: JSON.stringify({
             nic:this.state.nic,
@@ -108,11 +118,13 @@ export default class StudentsTable extends React.Component{
       }      
 
     updateClick(){
+        const storedToken = JSON.parse(localStorage.getItem('token'));
         fetch(variables.API_URL+'Students',{
             method:'PUT',
             headers:{
                 'Accept':'application/json',
-                'Content-Type':'application/json'
+                'Content-Type':'application/json',
+                'Authorization': `Bearer ${storedToken}` // Include the token in the headers
             },
             body:JSON.stringify({
                 nic:this.state.nic,
@@ -133,12 +145,14 @@ export default class StudentsTable extends React.Component{
     }
 
     deleteClick(cs){
+        const storedToken = JSON.parse(localStorage.getItem('token'));
         if(window.confirm('Are you Sure to Delete?')) {
         fetch(variables.API_URL+'Students',{
             method:'DELETE',
             headers:{
                 'Accept':'application/json',
-                'Content-Type':'application/json'
+                'Content-Type':'application/json',
+                'Authorization': `Bearer ${storedToken}` // Include the token in the headers
             },
             body:JSON.stringify({
                 nic:cs.nic

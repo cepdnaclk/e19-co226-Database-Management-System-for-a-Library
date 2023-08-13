@@ -2,6 +2,8 @@ import React from 'react';
 import { variables } from 'Variables';
 
 export default class BooksTable extends React.Component{
+
+    
     constructor(props) {
         super(props);
         this.state={
@@ -16,9 +18,17 @@ export default class BooksTable extends React.Component{
     }
     
     refreshList() {
-        fetch(variables.API_URL+'books')
+        const storedToken = JSON.parse(localStorage.getItem('token'));
+        fetch(variables.API_URL+'books', {
+            headers: {
+                'Authorization': `Bearer ${storedToken}` // Include the token in the headers
+            }
+        })
         .then(response=>response.json())
         .then(data=>{this.setState({books:data});
+        }).catch(error => {
+            console.error('Error fetching books:', error);
+            // You can display an error message to the user if needed
         });
     }
 
@@ -78,6 +88,7 @@ export default class BooksTable extends React.Component{
     }
 
     createClick(){
+        const storedToken = JSON.parse(localStorage.getItem('token'));
         if (!this.state.bookId||!this.state.bookTitle || !this.state.bookEdition || !this.state.bookAuthor || !this.state.publisherName || !this.state.category) {
             alert('Please fill in all required fields.');
             return;
@@ -86,7 +97,8 @@ export default class BooksTable extends React.Component{
             method:'POST',
             headers:{
                 'Accept':'application/json',
-                'Content-Type':'application/json'
+                'Content-Type':'application/json',
+                'Authorization': `Bearer ${storedToken}` // Include the token in the headers
             },
             body:JSON.stringify({
                 bookId:this.state.bookId,
@@ -114,11 +126,13 @@ export default class BooksTable extends React.Component{
     }
 
     updateClick(){
+        const storedToken = JSON.parse(localStorage.getItem('token'));
         fetch(variables.API_URL+'books',{
             method:'PUT',
             headers:{
                 'Accept':'application/json',
-                'Content-Type':'application/json'
+                'Content-Type':'application/json',
+                'Authorization': `Bearer ${storedToken}` // Include the token in the headers
             },
             body:JSON.stringify({
                 bookId:this.state.bookId,
@@ -144,11 +158,13 @@ export default class BooksTable extends React.Component{
     }
 
     deleteClick(cs){
+        const storedToken = JSON.parse(localStorage.getItem('token'));
         fetch(variables.API_URL+'books',{
             method:'DELETE',
             headers:{
                 'Accept':'application/json',
-                'Content-Type':'application/json'
+                'Content-Type':'application/json',
+                'Authorization': `Bearer ${storedToken}` // Include the token in the headers
             },
             body:JSON.stringify({
                 bookId:cs.bookId

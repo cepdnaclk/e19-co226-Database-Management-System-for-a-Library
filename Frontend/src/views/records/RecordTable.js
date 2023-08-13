@@ -25,19 +25,36 @@ export default class RecordsTable extends React.Component{
     }
     
     refreshList() {
-        fetch(variables.API_URL+'Borrowers')
+        const storedToken = JSON.parse(localStorage.getItem('token'));
+        fetch(variables.API_URL+'Borrowers', {
+            headers: {
+                'Authorization': `Bearer ${storedToken}` // Include the token in the headers
+            }
+        })
         .then(response=>response.json())
         .then(data=>{this.setState({records:data});
         })        
-        fetch(variables.API_URL+'Students')
+        fetch(variables.API_URL+'Students', {
+            headers: {
+                'Authorization': `Bearer ${storedToken}` // Include the token in the headers
+            }
+        })
         .then(response=>response.json())
         .then(data=>{this.setState({students:data});
         });
-        fetch(variables.API_URL+'user')
+        fetch(variables.API_URL+'api/test/user', {
+            headers: {
+                'Authorization': `Bearer ${storedToken}` // Include the token in the headers
+            }
+        })
         .then(response=>response.json())
         .then(data=>{this.setState({users:data});
         });
-        fetch(variables.API_URL+'books')
+        fetch(variables.API_URL+'books', {
+            headers: {
+                'Authorization': `Bearer ${storedToken}` // Include the token in the headers
+            }
+        })
         .then(response=>response.json())
         .then(data=>{this.setState({books:data});
         })
@@ -102,11 +119,13 @@ export default class RecordsTable extends React.Component{
     }
 
     createClick(){
+        const storedToken = JSON.parse(localStorage.getItem('token'));
         fetch(variables.API_URL+'Borrowers',{
             method:'POST',
             headers:{
                 'Accept':'application/json',
-                'Content-Type':'application/json'
+                'Content-Type':'application/json',
+                'Authorization': `Bearer ${storedToken}` // Include the token in the headers
             },
             body:JSON.stringify({
                 issueDate:this.state.issueDate,
@@ -128,11 +147,13 @@ export default class RecordsTable extends React.Component{
     }
 
     updateClick(){
+        const storedToken = JSON.parse(localStorage.getItem('token'));
         fetch(variables.API_URL+'Borrowers',{
             method:'PUT',
             headers:{
                 'Accept':'application/json',
-                'Content-Type':'application/json'
+                'Content-Type':'application/json',
+                'Authorization': `Bearer ${storedToken}` // Include the token in the headers
             },
             body:JSON.stringify({
                 issueId:this.state.issueId,
@@ -159,12 +180,14 @@ export default class RecordsTable extends React.Component{
     }
 
     deleteClick(cs){
+        const storedToken = JSON.parse(localStorage.getItem('token'));
         if(window.confirm('Are you Sure to Delete?')) {
         fetch(variables.API_URL+'Borrowers',{
             method:'DELETE',
             headers:{
                 'Accept':'application/json',
-                'Content-Type':'application/json'
+                'Content-Type':'application/json',
+                'Authorization': `Bearer ${storedToken}` // Include the token in the headers
             },
             body:JSON.stringify({
                 issueId:cs.issueId

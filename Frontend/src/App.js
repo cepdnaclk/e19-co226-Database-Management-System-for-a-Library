@@ -1,28 +1,40 @@
+import React, { useState,useEffect } from 'react';
 import { useSelector } from 'react-redux';
+import { useRoutes } from 'react-router-dom';
 
 import { ThemeProvider } from '@mui/material/styles';
 import { CssBaseline, StyledEngineProvider } from '@mui/material';
-
-// routing
-import Routes from 'routes';
 
 // defaultTheme
 import themes from 'themes';
 
 // project imports
 import NavigationScroll from 'layout/NavigationScroll';
+import MainRoutes from 'routes/MainRoutes';
+import LoginRoutes from 'routes/LoginRoutes';
 
 // ==============================|| APP ||============================== //
 
 const App = () => {
     const customization = useSelector((state) => state.customization);
+    const storedToken = localStorage.getItem('token');
+    const [token, setToken] = useState(storedToken);
+
+
+    useEffect(() => {
+        if (token) {
+            localStorage.setItem('token', token);
+        } else {
+            localStorage.removeItem('token');
+        }
+    }, [token]);
 
     return (
         <StyledEngineProvider injectFirst>
             <ThemeProvider theme={themes(customization)}>
                 <CssBaseline />
                 <NavigationScroll>
-                    <Routes />
+                            {!token ?<LoginRoutes setToken={setToken}/>:<MainRoutes />}
                 </NavigationScroll>
             </ThemeProvider>
         </StyledEngineProvider>
