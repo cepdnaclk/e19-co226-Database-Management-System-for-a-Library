@@ -42,14 +42,14 @@ export default class RecordsTable extends React.Component{
         .then(response=>response.json())
         .then(data=>{this.setState({students:data});
         });
-        fetch(variables.API_URL+'api/test/user', {
-            headers: {
-                'Authorization': `Bearer ${storedToken}` // Include the token in the headers
-            }
-        })
-        .then(response=>response.json())
-        .then(data=>{this.setState({users:data});
-        });
+        // fetch(variables.API_URL+'api/test/user', {
+        //     headers: {
+        //         'Authorization': `Bearer ${storedToken}` // Include the token in the headers
+        //     }
+        // })
+        // .then(response=>response.json())
+        // .then(data=>{this.setState({users:data});
+        // });
         fetch(variables.API_URL+'books', {
             headers: {
                 'Authorization': `Bearer ${storedToken}` // Include the token in the headers
@@ -136,14 +136,22 @@ export default class RecordsTable extends React.Component{
                 nic:this.state.nic,
             })
         })
-        .then(res=>res.json())
-        .then((result)=>{
-            alert(result);
-            this.refreshList();
-            // eslint-disable-next-line
-        },(error)=>{
-            alert('Failed');
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error('Failed to update');
+            }
         })
+        .then((result)=>{
+            this.refreshList();
+            const closeButton = document.getElementById('closeButton');
+            if (closeButton) {
+                closeButton.click();
+            }
+        },()=>{
+            alert('Failed');
+        });
     }
 
     updateClick(){
@@ -299,7 +307,7 @@ export default class RecordsTable extends React.Component{
                         <div className="modal-content">
                             <div className="modal-header">
                                 <h5 className="modal-title">{modalTitle}</h5>
-                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                <button type="button" className="btn-close" id="closeButton" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
 
                             <div className="modal-body">

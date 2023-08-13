@@ -6,15 +6,20 @@ export default class UserTable extends React.Component{
         super(props);
         this.state={
             users:[],
-            userName:"",
-            userContact:"",
+            username:"",
+            email:"",
             userPassword:"",
-            userId:0
+            id:0
         }
     }
     
     refreshList() {
-        fetch(variables.API_URL+'user')
+        const storedToken = JSON.parse(localStorage.getItem('token'));
+        fetch(variables.API_URL+'user', {
+            headers: {
+                'Authorization': `Bearer ${storedToken}` // Include the token in the headers
+            }
+        })
         .then(response=>response.json())
         .then(data=>{this.setState({users:data});
         });
@@ -26,11 +31,11 @@ export default class UserTable extends React.Component{
     }
 
     changeName = (e)=>{
-        this.setState({userName:e.target.value});
+        this.setState({username:e.target.value});
     }
 
     changeContact = (e)=>{
-        this.setState({userContact:e.target.value});
+        this.setState({email:e.target.value});
     }
 
     changePassword = (e)=>{
@@ -39,63 +44,77 @@ export default class UserTable extends React.Component{
 
     addClick(){
         this.setState({
-            modalTitle:'Add User',
-            userId:0,
-            userName:"",
-            userContact:"",
+            modalTitle:'Add Admin',
+            id:0,
+            username:"",
+            email:"",
             userPassword:""
         });
     }
 
     editClick(cs){
         this.setState({
-            modalTitle:'Edit User',
-            userId:cs.userId,
-            userName:cs.userName,
-            userContact:cs.userContact,
+            modalTitle:'Edit Admin',
+            id:cs.id,
+            username:cs.username,
+            email:cs.email,
             userPassword:cs.userPassword
         });
     }
 
     createClick(){
-        fetch(variables.API_URL+'user',{
+        const storedToken = JSON.parse(localStorage.getItem('token'));
+        fetch(variables.API_URL+'api/auth/signup',{
             method:'POST',
             headers:{
                 'Accept':'application/json',
-                'Content-Type':'application/json'
+                'Content-Type':'application/json',
+                'Authorization': `Bearer ${storedToken}` // Include the token in the headers
             },
             body:JSON.stringify({
-                userName:this.state.userName,
-                userContact:this.state.userContact,
-                userPassword:this.state.userPassword
+                username:this.state.username,
+                email:this.state.email,
+                password:this.state.userPassword,
+                roles: ['admin']
             })
         })
-        .then(res=>res.json())
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error('Failed to update');
+            }
+        })
         .then((result)=>{
-            alert(result);
             this.refreshList();
+            const closeButton = document.getElementById('closeButton');
+            if (closeButton) {
+                closeButton.click();
+            }
         },()=>{
             alert('Failed');
-        })
+        });
     }
 
     updateClick(){
-        fetch(variables.API_URL+'user',{
+        const storedToken = JSON.parse(localStorage.getItem('token'));
+        fetch(variables.API_URL+'api/auth/signup',{
             method:'PUT',
             headers:{
                 'Accept':'application/json',
-                'Content-Type':'application/json'
+                'Content-Type':'application/json',
+                'Authorization': `Bearer ${storedToken}` // Include the token in the headers
             },
             body:JSON.stringify({
-                userId:this.state.userId,
-                userName:this.state.userName,
-                userContact:this.state.userContact,
-                userPassword:this.state.userPassword
+                id:this.state.id,
+                username:this.state.username,
+                email:this.state.email,
+                password:this.state.userPassword,
+                roles: ['admin']
             })
         })
         .then(res=>res.json())
         .then((result)=>{
-            alert(result);
             this.refreshList();
         },()=>{
             alert('Failed');
@@ -103,20 +122,21 @@ export default class UserTable extends React.Component{
     }
 
     deleteClick(cs){
+        const storedToken = JSON.parse(localStorage.getItem('token'));
         if(window.confirm('Are you Sure to Delete?')) {
         fetch(variables.API_URL+'user',{
             method:'DELETE',
             headers:{
                 'Accept':'application/json',
-                'Content-Type':'application/json'
+                'Content-Type':'application/json',
+                'Authorization': `Bearer ${storedToken}` // Include the token in the headers
             },
             body:JSON.stringify({
-                userId:cs.userId
+                id:cs.id
             })
         })
         .then(res=>res.json())
         .then((result)=>{
-            alert(result);
             this.refreshList();
         },()=>{
             alert('Failed');
@@ -127,9 +147,9 @@ export default class UserTable extends React.Component{
         const {
             users,
             modalTitle,
-            userId,
-            userName,
-            userContact,
+            id,
+            username,
+            email,
             userPassword,
         } = this.state;
 
@@ -140,7 +160,7 @@ export default class UserTable extends React.Component{
                 data-bs-toggle="modal"
                 data-bs-target="#exampleModal"
                 onClick={()=>this.addClick()}>
-                    Add User
+                    Add Admin
                 </button>
                 
                 <div className='table-responsive' style={{borderRadius: '5px'}}>
@@ -149,19 +169,17 @@ export default class UserTable extends React.Component{
                         <tr>
                             <th>Id</th>
                             <th>Name</th>
-                            <th>Contact</th>
-                            <th>Password</th>
+                            <th>Email</th>
                             <th>Options</th>
                         </tr>
                     </thead>
                     <tbody>
                         {
                             users.map(cs=>
-                                <tr key={cs.userId}>
-                                    <td>{cs.userId}</td>
-                                    <td>{cs.userName}</td>
-                                    <td>{cs.userContact}</td>
-                                    <td>{cs.userPassword}</td>
+                                <tr key={cs.id}>
+                                    <td>{cs.id}</td>
+                                    <td>{cs.username}</td>
+                                    <td>{cs.email}</td>
                                     <td>
                                     <button type="button"
                                             className="btn btn-light mr-1"
@@ -197,30 +215,30 @@ export default class UserTable extends React.Component{
                         <div className="modal-content">
                             <div className="modal-header">
                                 <h5 className="modal-title">{modalTitle}</h5>
-                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                <button type="button" className="btn-close" id="closeButton" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div className="modal-body">
                                 <div className="input-group mb-3">
                                     <span className="input-group-text">Name</span>
-                                    <input type="text" className="form-control" value={userName} onChange={this.changeName}/>
+                                    <input type="text" className="form-control" value={username} onChange={this.changeName}required/>
                                 </div>
                                 <div className="input-group mb-3">
-                                    <span className="input-group-text">Contact</span>
-                                    <input type="text" className="form-control" value={userContact} onChange={this.changeContact}/>
+                                    <span className="input-group-text">Email</span>
+                                    <input type="email" className="form-control" value={email} onChange={this.changeContact} required/>
                                 </div>
                                 <div className="input-group mb-3">
                                     <span className="input-group-text">Password</span>
-                                    <input type="number" className="form-control" value={userPassword} onChange={this.changePassword}/>
+                                    <input type="password" className="form-control" value={userPassword} onChange={this.changePassword} required/>
                                 </div>
 
-                                {userId===0?
+                                {id===0?
                                 <button type="button"
                                 className="btn btn-primary float-start"
                                 onClick={()=>this.createClick()}
                                 >Create</button>
                                 :null}
 
-                                {userId!==0?
+                                {id!==0?
                                 <button type="button"
                                 className="btn btn-primary float-start"
                                 onClick={()=>this.updateClick()}

@@ -107,14 +107,22 @@ export default class StudentsTable extends React.Component{
             gender: this.state.gender
           })
         })
-          .then(res => res.json())
-          .then((result) => {
-            alert(result);
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error('Failed to update');
+            }
+        })
+        .then((result)=>{
             this.refreshList();
-          })
-          .catch(() => {
+            const closeButton = document.getElementById('closeButton');
+            if (closeButton) {
+                closeButton.click();
+            }
+        },()=>{
             alert('Failed');
-          });
+        });
       }      
 
     updateClick(){
@@ -137,7 +145,6 @@ export default class StudentsTable extends React.Component{
         })
         .then(res=>res.json())
         .then((result)=>{
-            alert(result);
             this.refreshList();
         },()=>{
             alert('Failed');
@@ -160,7 +167,6 @@ export default class StudentsTable extends React.Component{
         })
         .then(res=>res.json())
         .then((result)=>{
-            alert(result);
             this.refreshList();
         },()=>{
             alert('Failed');
@@ -247,7 +253,7 @@ export default class StudentsTable extends React.Component{
                         <div className="modal-content">
                             <div className="modal-header">
                                 <h5 className="modal-title">{modalTitle}</h5>
-                                <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                <button type="button" className="btn-close" id="closeButton" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
 
                             <div className="modal-body">

@@ -8,9 +8,6 @@ import java.util.Map;
 
 @Service
 public class HomeService {
-
-	@Autowired
-	private MemberService memberService;
 	
 	@Autowired
 	private CategoryService categoryService;
@@ -20,9 +17,9 @@ public class HomeService {
 	
 	public Map<String, Long> getTopTilesMap() {
 		Map<String, Long> map = new HashMap<String, Long>();
-		map.put("totalMembers", memberService.getTotalCount());
-		map.put("totalStudents", memberService.getStudentsCount());
-		map.put("totalParents", memberService.getParentsCount());
+//		map.put("totalMembers", memberService.getTotalCount());
+//		map.put("totalStudents", memberService.getStudentsCount());
+//		map.put("totalParents", memberService.getParentsCount());
 		map.put("totalCategories", categoryService.getTotalCount());
 		return map;
 	}

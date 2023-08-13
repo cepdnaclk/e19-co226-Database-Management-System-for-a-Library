@@ -1,7 +1,7 @@
 package com.library.library.jwtsecurity.security.services;
 
-import com.library.library.jwtsecurity.models.UserReg;
-import com.library.library.jwtsecurity.repository.UserRegRepository;
+import com.library.library.jwtsecurity.models.User;
+import com.library.library.jwtsecurity.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -12,15 +12,15 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
   @Autowired
-  UserRegRepository userRegRepository;
+  UserRepository userRepository;
 
   @Override
   @Transactional
   public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    UserReg userReg = userRegRepository.findByUsername(username)
+    User user = userRepository.findByUsername(username)
         .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
 
-    return UserDetailsImpl.build(userReg);
+    return UserDetailsImpl.build(user);
   }
 
 }

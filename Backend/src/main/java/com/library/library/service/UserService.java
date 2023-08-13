@@ -1,58 +1,36 @@
 package com.library.library.service;
 
-import com.library.library.model.User;
-import com.library.library.repository.UserRepository;
+import com.library.library.jwtsecurity.models.User;
+import com.library.library.jwtsecurity.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.Date;
 import java.util.List;
 
 @Service
 public class UserService {
+    private final UserRepository userRepository;
 
-	@Autowired
-	private UserRepository userRepository;
+    @Autowired
+    public UserService(UserRepository userRepository) {
+        this.userRepository=userRepository;
+    }
 
-//	@Autowired
-//	private BCryptPasswordEncoder passwordEncoder;
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
 
-	public List<User> getAllUsers() {
-		return userRepository.findAllByOrderByDisplayNameAsc();
-	}
+    public User createUser(User user) {
+        return userRepository.save(user);
+    }
 
+    public User updateUser(User user) {
+        return userRepository.save(user);
+    }
 
-	public List<User> getAllActiveUsers() { return
-		userRepository.findAllByActiveOrderByDisplayNameAsc(1);
-	}
-
-	public User getByUsername(String username) {
-		return userRepository.findByUsername(username);
-	}
-
-	public User getById(Long id) {
-		return userRepository.findById(id).get();
-	}
-
-	public User addNew(User user) {
-		user.setPassword( user.getPassword() );
-		user.setCreatedDate( new Date() );
-		user.setLastModifiedDate( user.getCreatedDate() );
-		user.setActive(1);
-		return userRepository.save(user);
-	}
-
-	public User update(User user) {
-		user.setLastModifiedDate( new Date() );
-		return userRepository.save( user );
-	}
-
-	public void delete(User user) {
-		userRepository.delete(user);
-	}
-
-	public void delete(Long id) {
-		userRepository.deleteById(id);
-	}
+    public void deleteUser(long userId) {
+        userRepository.deleteById(userId);
+    }
+    public User getUserByNic(Long nic) {
+        return userRepository.findById(nic).orElse(null);
+    }
 }

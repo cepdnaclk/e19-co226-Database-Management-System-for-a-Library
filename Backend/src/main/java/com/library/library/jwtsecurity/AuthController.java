@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.library.library.jwtsecurity.models.UserReg;
+import com.library.library.jwtsecurity.models.User;
 import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ import com.library.library.jwtsecurity.payload.request.SignupRequest;
 import com.library.library.jwtsecurity.payload.response.JwtResponse;
 import com.library.library.jwtsecurity.payload.response.MessageResponse;
 import com.library.library.jwtsecurity.repository.RoleRepository;
-import com.library.library.jwtsecurity.repository.UserRegRepository;
+import com.library.library.jwtsecurity.repository.UserRepository;
 import com.library.library.jwtsecurity.security.jwt.JwtUtils;
 import com.library.library.jwtsecurity.security.services.UserDetailsImpl;
 
@@ -40,7 +40,7 @@ public class AuthController {
   AuthenticationManager authenticationManager;
 
   @Autowired
-  UserRegRepository userRegRepository;
+  UserRepository userRepository;
 
   @Autowired
   RoleRepository roleRepository;
@@ -55,7 +55,7 @@ public class AuthController {
   public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
 
     Authentication authentication = authenticationManager.authenticate(
-        new UsernamePasswordAuthenticationToken(userRegRepository.findByEmail(loginRequest.getUsername()).getUsername(), loginRequest.getPassword()));
+        new UsernamePasswordAuthenticationToken(userRepository.findByEmail(loginRequest.getUsername()).getUsername(), loginRequest.getPassword()));
 
     SecurityContextHolder.getContext().setAuthentication(authentication);
     String jwt = jwtUtils.generateJwtToken(authentication);
@@ -80,20 +80,20 @@ public class AuthController {
   public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
     System.out.println(signUpRequest);
 
-    if (userRegRepository.existsByUsername(signUpRequest.getUsername())) {
+    if (userRepository.existsByUsername(signUpRequest.getUsername())) {
       return ResponseEntity
           .badRequest()
           .body(new MessageResponse("Error: Username is already taken!"));
     }
 
-    if (userRegRepository.existsByEmail(signUpRequest.getEmail())) {
+    if (userRepository.existsByEmail(signUpRequest.getEmail())) {
       return ResponseEntity
           .badRequest()
           .body(new MessageResponse("Error: Email is already in use!"));
     }
 
     // Create new user's account
-    UserReg userReg = new UserReg(signUpRequest.getUsername(),
+    User user = new User(signUpRequest.getUsername(),
                signUpRequest.getEmail(),
                encoder.encode(signUpRequest.getPassword()));
 
@@ -127,8 +127,8 @@ public class AuthController {
       });
     }
 
-    userReg.setRoles(roles);
-    userRegRepository.save(userReg);
+    user.setRoles(roles);
+    userRepository.save(user);
 
     return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
   }

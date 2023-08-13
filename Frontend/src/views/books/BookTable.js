@@ -109,19 +109,22 @@ export default class BooksTable extends React.Component{
                 category:this.state.category
             })
         })
-        .then((res) => {
-            if (res.ok) {
-                const closeButton = document.getElementById('closeButton1');
-                closeButton.click();
-                this.refreshList();
-                return res.json();
-            }else{
-                alert('Failed');
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error('Failed to update');
             }
         })
-        .catch((error) => {
-            // alert('Failed');
-        })
+        .then((result)=>{
+            this.refreshList();
+            const closeButton = document.getElementById('closeButton');
+            if (closeButton) {
+                closeButton.click();
+            }
+        },()=>{
+            alert('Failed');
+        });
         
     }
 
@@ -263,7 +266,7 @@ export default class BooksTable extends React.Component{
                         <div className="modal-content">
                             <div className="modal-header">
                                 <h5 className="modal-title">{modalTitle}</h5>
-                                <button type="button" id="closeButton1" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                <button type="button" id="closeButton" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
 
                             <div className="modal-body">
