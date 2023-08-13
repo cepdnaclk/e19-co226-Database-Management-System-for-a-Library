@@ -146,18 +146,22 @@ export default class BooksTable extends React.Component{
                 category:this.state.category
             })
         })
-        .then((res) => {
-            if (res.ok) {
-                alert('Successfully added');
-                this.refreshList();
-                return res.json();
-            }else{
-                alert('Failed');
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error('Failed to update');
             }
         })
-        .catch((error) => {
-            // alert('Failed');
-        })
+        .then((result)=>{
+            this.refreshList();
+            const closeButton = document.getElementById('closeButton');
+            if (closeButton) {
+                closeButton.click();
+            }
+        },()=>{
+            alert('Failed');
+        });
     }
 
     deleteClick(cs){
@@ -173,17 +177,18 @@ export default class BooksTable extends React.Component{
                 bookId:cs.bookId
             })
         })
-        .then((res) => {
-            if (res.ok) {
-                this.refreshList();
-                return res.json();
-            }else{
-                alert('Failed');
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error('Failed to update');
             }
         })
-        .catch((error) => {
-            // alert('Failed');
-        })
+        .then((result)=>{
+            this.refreshList();
+        },()=>{
+            alert('Failed');
+        });
     }
 
     render(){

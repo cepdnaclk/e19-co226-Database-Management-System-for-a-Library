@@ -6,9 +6,9 @@ import UserTable from './UsersTable';
 import MainCard from 'ui-component/cards/MainCard';
 
 const Users = () => (
-  <MainCard title="Users">
+  <MainCard title="Admins">
   <Typography variant="body2">
-  Welcome to the Users section of the Library Management System. This page is dedicated to all the users who are registered in the library.
+  Welcome to the Admin section of the Library Management System. This page is dedicated to all the users who are registered in the library.
   </Typography>
   <UserTable/>
 </MainCard>

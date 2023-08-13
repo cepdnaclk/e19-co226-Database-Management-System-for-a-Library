@@ -29,7 +29,7 @@ const other = {
         },
         {
             id: 'Students',
-            title: 'Students',
+            title: 'Members',
             type: 'item',
             url: '/students',
             icon: icons.IconSchool,
@@ -37,7 +37,7 @@ const other = {
         },
         {
             id: 'Users',
-            title: 'Users',
+            title: 'Admins',
             type: 'item',
             url: '/users',
             icon: icons.IconUsers,

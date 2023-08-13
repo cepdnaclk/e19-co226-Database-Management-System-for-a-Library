@@ -32,20 +32,20 @@ public class Issue implements Serializable {
 	private String expectedReturnDate;
 	
 	@Column(name = "returned")
-	private Integer status;
+	private String status;
 
-	@JsonIgnore
-	@ManyToOne(fetch = FetchType.LAZY)
+//	@JsonIgnore
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "nic")
 	private Student student;
 
-	@JsonIgnore
-	@OneToOne(fetch = FetchType.LAZY)
+//	@JsonIgnore
+	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "bookId")
 	private Book book;
 
 	// Parameterized constructor
-	public Issue(String issueDate, String expectedReturnDate, Integer status, String notes, Book book, Student student) {
+	public Issue(String issueDate, String expectedReturnDate, String status, String notes, Book book, Student student) {
 		this.issueDate = issueDate;
 		this.expectedReturnDate = expectedReturnDate;
 		this.status = status;
@@ -100,11 +100,11 @@ public class Issue implements Serializable {
 	}
 
 
-	public Integer getStatus() {
+	public String getStatus() {
 		return status;
 	}
 
-	public void setStatus(Integer returned) {
+	public void setStatus(String returned) {
 		this.status = returned;
 	}
 	

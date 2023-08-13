@@ -29,7 +29,6 @@ public class IssueService {
 	
 	public Issue addNew(Issue issue) {
 		issue.setIssueDate( "1970-01-01" );
-		issue.setStatus( Constants.BOOK_NOT_RETURNED );
 		return issueRepository.save(issue);
 	}
 	

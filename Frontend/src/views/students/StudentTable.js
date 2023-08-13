@@ -143,12 +143,22 @@ export default class StudentsTable extends React.Component{
                 gender:this.state.gender
             })
         })
-        .then(res=>res.json())
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error('Failed to update');
+            }
+        })
         .then((result)=>{
             this.refreshList();
+            const closeButton = document.getElementById('closeButton');
+            if (closeButton) {
+                closeButton.click();
+            }
         },()=>{
             alert('Failed');
-        })
+        });
     }
 
     deleteClick(cs){
@@ -165,12 +175,23 @@ export default class StudentsTable extends React.Component{
                 nic:cs.nic
             })
         })
-        .then(res=>res.json())
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error('Failed to update');
+            }
+        })
         .then((result)=>{
             this.refreshList();
+            const closeButton = document.getElementById('closeButton');
+            if (closeButton) {
+                closeButton.click();
+            }
         },()=>{
             alert('Failed');
-        })}
+        });
+    }
     }
 
     render(){

@@ -49,7 +49,7 @@ public class BookController {
 	}
 
 	@DeleteMapping()
-	public ResponseEntity<Void> deleteBook(@RequestBody Map<String, Long> payload) {
+	public ResponseEntity<Long> deleteBook(@RequestBody Map<String, Long> payload) {
 		Long id = payload.get("bookId");
 		System.out.println(id);
 		Book existingBook = bookService.getBookById(id);
@@ -57,6 +57,6 @@ public class BookController {
 			return ResponseEntity.notFound().build();
 		}
 		bookService.delete(id);
-		return ResponseEntity.status(HttpStatus.OK).build();
+		return new ResponseEntity(id,HttpStatus.OK);
 	}
 }

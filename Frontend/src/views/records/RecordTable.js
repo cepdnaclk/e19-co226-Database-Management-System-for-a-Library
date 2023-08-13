@@ -171,20 +171,27 @@ export default class RecordsTable extends React.Component{
                 notes:this.state.notes,
                 bookId:this.state.bookId,
                 nic:this.state.nic,
-                userId:this.state.userId,
                 // role:this.state.role,
                 // userName:this.state.userName,
 
             })
         })
-        .then(res=>res.json())
-        .then((result)=>{
-            alert(result);
-            this.refreshList();
-            // eslint-disable-next-line
-        },(error)=>{
-            alert('Failed');
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error('Failed to update');
+            }
         })
+        .then((result)=>{
+            this.refreshList();
+            const closeButton = document.getElementById('closeButton');
+            if (closeButton) {
+                closeButton.click();
+            }
+        },()=>{
+            alert('Failed');
+        });
     }
 
     deleteClick(cs){
@@ -201,14 +208,23 @@ export default class RecordsTable extends React.Component{
                 issueId:cs.issueId
             })
         })
-        .then(res=>res.json())
+        .then(response => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error('Failed to update');
+            }
+        })
         .then((result)=>{
-            alert(result);
             this.refreshList();
-            // eslint-disable-next-line
-        },(error)=>{
+            const closeButton = document.getElementById('closeButton');
+            if (closeButton) {
+                closeButton.click();
+            }
+        },()=>{
             alert('Failed');
-        })}
+        });
+    }
     }
 
     render(){
@@ -246,12 +262,12 @@ export default class RecordsTable extends React.Component{
                         <tr>
                             <th>Id</th>
                             <th>Book Title</th>
-                            <th>Roll No</th>
+                            <th>Book Id</th>
+                            <th>Member</th>
+                            <th>NIC</th>
                             <th>Borrow Date</th>
                             <th>Due Date</th>
                             <th>Status</th>
-                            <th>Copies</th>
-                            <th>User</th>
                             <th>Options</th>
                         </tr>
                     </thead>
@@ -260,13 +276,13 @@ export default class RecordsTable extends React.Component{
                             records.map(cs=>
                                 <tr key={cs.issueId}>
                                     <td>{cs.issueId}</td>
-                                    <td>{cs.bookTitle}</td>
-                                    <td>{cs.role}</td>
+                                    <td>{cs.book.bookTitle}</td>
+                                    <td>{cs.book.bookId}</td>
+                                    <td>{cs.student.name}</td>
+                                    <td>{cs.student.nic}</td>
                                     <td>{cs.issueDate}</td>
                                     <td>{cs.expectedReturnDate}</td>
                                     <td>{cs.status}</td>
-                                    <td>{cs.notes}</td>
-                                    <td>{cs.userName}</td>
                                     
                                     <td>
                                         <button type="button"
@@ -355,15 +371,11 @@ export default class RecordsTable extends React.Component{
                                     <span className="input-group-text">Status</span>
                                     <select className="form-control" value={status} onChange={this.changeStatus}>
                                         <option selected></option>
-                                        <option value="0">Not Returned</option>
-                                        <option value="1">Returned</option>
+                                        <option value="Not Returned">Not Returned</option>
+                                        <option value="Returned">Returned</option>
                                     </select>
                                 </div>
 
-                                <div className="input-group mb-3">
-                                    <span className="input-group-text">Copies</span>
-                                    <input type="text" className="form-control" value={notes} onChange={this.changeCopies}/>
-                                </div>
 
 
                                 {issueId===0?

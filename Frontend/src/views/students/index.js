@@ -8,10 +8,10 @@ import MainCard from 'ui-component/cards/MainCard';
 // ==============================|| SAMPLE PAGE ||============================== //
 
 const Students = () => (
-    <MainCard title="Students">
+    <MainCard title="Members">
         <Typography variant="body2">
-        Welcome to the Students section of the Library Management System. This page is dedicated to all the students who are registered in the library.
-        Our goal is to provide you with a seamless and efficient library experience. We understand that as a student, you have a busy schedule, and that's why we have extended hours for you to use the library.
+        Welcome to the Member section of the Library Management System. This page is dedicated to all the memberss who are registered in the library.
+        Our goal is to provide you with a seamless and efficient library experience. We understand that as a member, you have a busy schedule, and that's why we have extended hours for you to use the library.
         </Typography>
         <StudentsTable/>
     </MainCard>

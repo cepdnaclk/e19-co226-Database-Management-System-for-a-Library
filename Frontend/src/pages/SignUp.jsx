@@ -44,7 +44,7 @@ export default function SignUp() {
         username: data.get('firstName'),
         password: data.get('password'),
         email: data.get('email'),
-        roles: ['admin']
+        role: 'admin'
       });
 
       if (response.status === 200) {

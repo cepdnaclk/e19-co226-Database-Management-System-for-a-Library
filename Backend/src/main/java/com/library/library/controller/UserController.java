@@ -40,7 +40,7 @@ public class UserController {
 
     @DeleteMapping
     public ResponseEntity<Long> deleteUser(@RequestBody Map<String, Long> payload) {
-        Long userId = payload.get("nic");
+        Long userId = payload.get("id");
         System.out.println(userId);
         userService.deleteUser(userId);
         return new ResponseEntity(userId,HttpStatus.OK);
