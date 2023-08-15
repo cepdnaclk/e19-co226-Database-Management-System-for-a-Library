@@ -1,12 +1,13 @@
 package com.library.library.controller;
-
 import com.library.library.model.Book;
 import com.library.library.model.Category;
 import com.library.library.model.Student;
+import com.library.library.repository.BookRepository;
 import com.library.library.repository.CategoryRepository;
 import com.library.library.service.BookService;
 import com.library.library.service.CategoryService;
 import com.library.library.service.StudentService;
+import jakarta.persistence.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.validation.Valid;
+import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
 
@@ -30,9 +32,22 @@ public class BookController {
 	@Autowired
 	private CategoryRepository categoryRepository;
 
+	private final BookRepository bookRepository;
+
+	@Autowired
+	public BookController(BookRepository bookRepository) {
+		this.bookRepository = bookRepository;
+	}
+
 	@GetMapping
 	public List<Book> getAllBooks() {
 		return bookService.getAll();
+	}
+
+	@GetMapping("/total-revenue")
+	public int getNumberOfBooks() {
+		long totalBooks = bookRepository.count();
+		return (int) totalBooks;
 	}
 
 

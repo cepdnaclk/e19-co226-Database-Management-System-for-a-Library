@@ -47,9 +47,15 @@ const TotalIncomeLightCard = ({ isLoading }) => {
     const [totalRevenue, setTotalRevenue] = useState(0);
       
     useEffect(() => {
-        fetch(variables.API_URL+'books/total-revenue')
+        const storedToken = JSON.parse(localStorage.getItem('token'));
+
+        fetch(variables.API_URL+'categories/total-categories', {
+            headers: {
+                'Authorization': `Bearer ${storedToken}` // Include the token in the headers
+            }
+        })
         .then(response => response.json())
-        .then(totalRevenue => setTotalRevenue(totalRevenue[0].Total_Revenue))
+        .then(totalRevenue => setTotalRevenue(totalRevenue))
         .catch(error => console.log(error));
         }, []);
     
@@ -83,7 +89,7 @@ const TotalIncomeLightCard = ({ isLoading }) => {
                                         mt: 0.45,
                                         mb: 0.45
                                     }}
-                                    primary={<Typography variant="h4">Rs{totalRevenue}</Typography>}
+                                    primary={<Typography variant="h4">{totalRevenue}</Typography>}
                                     secondary={
                                         <Typography
                                             variant="subtitle2"
@@ -92,7 +98,7 @@ const TotalIncomeLightCard = ({ isLoading }) => {
                                                 mt: 0.5
                                             }}
                                         >
-                                            Total Revenue
+                                            Total categories
                                         </Typography>
                                     }
                                 />

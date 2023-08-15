@@ -34,7 +34,9 @@ public class CategoryService {
 		category.setCreateDate(String.valueOf(new Date()));
 		return categoryRepository.save(category);
 	}
-	
+
+
+
 	public Category save(Category category) {
 		return categoryRepository.save(category);
 	}
@@ -50,4 +52,10 @@ public class CategoryService {
 //	public boolean hasUsage(Category category) {
 //		return category.getBooks().size()>0;
 //	}
+
+	public int numberOfCategories() {
+		return (int)categoryRepository.count();
+	}
+
+
 }

@@ -139,7 +139,7 @@ export default class CategoryTable extends React.Component {
 
     deleteClick(cs) {
         const storedToken = JSON.parse(localStorage.getItem('token'));
-        fetch(variables.API_URL + 'categories', {
+        fetch(variables.API_URL + `categories/${cs.categoryId}`, {
             method: 'DELETE',
             headers: {
                 'Accept': 'application/json',

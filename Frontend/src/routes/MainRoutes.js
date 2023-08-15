@@ -5,6 +5,7 @@ import MainLayout from 'layout/MainLayout';
 import Loadable from 'ui-component/Loadable';
 import SignUp from 'pages/SignUp';
 import Category from 'views/category';
+import Logout from 'pages/Logout';
 
 // dashboard routing
 const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')));
@@ -60,5 +61,47 @@ const MainRoutes = {
 
 
 export default function ThemeRoutes() {
-    return useRoutes([MainRoutes]);
+    return useRoutes([ {
+        path: '/',
+        element:<MainLayout />,
+        children: [
+            {
+                path: '/',
+                element: <DashboardDefault />
+            },
+            {
+                path: 'dashboard',
+                children: [
+                    {
+                        path: 'default',
+                        element: <DashboardDefault />
+                    }
+                ]
+            },
+            {
+                path: 'Records',
+                element: <Records />
+            },
+            {
+                path: 'Books',
+                element: <Books />
+            },
+            {
+                path: 'Category',
+                element: <Category />
+            },
+            {
+                path: 'Students',
+                element: <Students />
+            },
+            {
+                path: 'Users',
+                element: <Users />
+            },
+            {
+                path:'Logout',
+                element:<Logout  />
+            }
+        ]
+    }]);
 }

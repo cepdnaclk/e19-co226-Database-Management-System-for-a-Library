@@ -1,5 +1,7 @@
 package com.library.library.model;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
 import jakarta.persistence.*;
@@ -10,6 +12,8 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "category")
 public class Category implements Serializable {
 

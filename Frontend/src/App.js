@@ -19,6 +19,10 @@ const App = () => {
     const customization = useSelector((state) => state.customization);
     const storedToken = localStorage.getItem('token');
     const [token, setToken] = useState(storedToken);
+    const removeToken = () => {
+        setToken(null); // Remove token from state
+        localStorage.removeItem('token'); // Clear token from localStorage
+    };
 
 
     useEffect(() => {

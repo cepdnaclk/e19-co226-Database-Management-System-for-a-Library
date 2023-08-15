@@ -34,4 +34,8 @@ public class StudentService {
     public Student getStudentByNic(Long nic) {
         return studentRepository.findById(nic).orElse(null);
     }
+
+    public int getNumberOfStudents(){return (int) studentRepository.count();}
+
+
 }

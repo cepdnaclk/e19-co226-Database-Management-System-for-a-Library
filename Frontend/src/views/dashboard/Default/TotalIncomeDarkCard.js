@@ -49,13 +49,17 @@ const TotalIncomeDarkCard = ({ isLoading }) => {
     const [totalInvest, setTotalInvest] = useState(0);
       
     useEffect(() => {
-        fetch(variables.API_URL+'books/total-invest')
+        const storedToken = JSON.parse(localStorage.getItem('token'));
+        fetch(variables.API_URL+'Students/total-students', {
+            headers: {
+                'Authorization': `Bearer ${storedToken}` // Include the token in the headers
+            }
+        })
         .then(response => response.json())
-        .then(totalInvest => setTotalInvest(totalInvest[0].total_bill))
+        .then(totalInvest => setTotalInvest(totalInvest))
         .catch(error => console.log(error));
         }, []);
     
-    console.log(totalInvest);
     
 
     return (
@@ -88,12 +92,12 @@ const TotalIncomeDarkCard = ({ isLoading }) => {
                                     }}
                                     primary={
                                         <Typography variant="h4" sx={{ color: '#fff' }}>
-                                            Rs{totalInvest}
+                                            {totalInvest}
                                         </Typography>
                                     }
                                     secondary={
                                         <Typography variant="subtitle2" sx={{ color: 'primary.light', mt: 0.25 }}>
-                                            Total Book Cost
+                                            Total Members
                                         </Typography>
                                     }
                                 />

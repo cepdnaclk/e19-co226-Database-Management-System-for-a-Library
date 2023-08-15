@@ -70,9 +70,14 @@ const TotalOrderLineChartCard = ({ isLoading }) => {
     const [totalRevenue, setTotalRevenue] = useState(0);
       
     useEffect(() => {
-        fetch(variables.API_URL+'books/total-revenue')
+        const storedToken = JSON.parse(localStorage.getItem('token'));
+        fetch(variables.API_URL+'Borrowers/total-issues', {
+            headers: {
+                'Authorization': `Bearer ${storedToken}` // Include the token in the headers
+            }
+        })
         .then(response => response.json())
-        .then(totalRevenue => setTotalRevenue(totalRevenue[0].Total_Revenue))
+        .then(totalRevenue => setTotalRevenue(totalRevenue))
         .catch(error => console.log(error));
         }, []);
     
@@ -135,11 +140,11 @@ const TotalOrderLineChartCard = ({ isLoading }) => {
                                             <Grid item>
                                                 {timeValue ? (
                                                     <Typography sx={{ fontSize: '2rem', fontWeight: 500, mr: 0.7, mt: 1.75, mb: 0.75 }}>
-                                                        Rs{totalRevenue}
+                                                        {totalRevenue}
                                                     </Typography>
                                                 ) : (
                                                     <Typography sx={{ fontSize: '2rem', fontWeight: 500, mr: 0.7, mt: 1.75, mb: 0.75 }}>
-                                                        Rs{totalRevenue}
+                                                        {totalRevenue}
                                                     </Typography>
                                                 )}
                                             </Grid>
@@ -163,7 +168,7 @@ const TotalOrderLineChartCard = ({ isLoading }) => {
                                                         color: theme.palette.primary[200]
                                                     }}
                                                 >
-                                                    Total Order
+                                                    Total Records
                                                 </Typography>
                                             </Grid>
                                         </Grid>

@@ -75,9 +75,14 @@ const EarningCard = ({ isLoading }) => {
     
       
     useEffect(() => {
-        fetch(variables.API_URL+'books/total-revenue')
+        const storedToken = JSON.parse(localStorage.getItem('token'));
+        fetch(variables.API_URL+'books/total-revenue', {
+            headers: {
+                'Authorization': `Bearer ${storedToken}` // Include the token in the headers
+            }
+        })
         .then(response => response.json())
-        .then(totalRevenue => setTotalRevenue(totalRevenue[0].Total_Revenue))
+        .then(totalRevenue => setTotalRevenue(totalRevenue))
         .catch(error => console.log(error));
         }, []);
 

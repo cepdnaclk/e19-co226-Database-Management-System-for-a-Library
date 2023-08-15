@@ -1,6 +1,8 @@
 package com.library.library.controller;
 
 import com.library.library.model.Student;
+import com.library.library.repository.BookRepository;
+import com.library.library.repository.StudentRepository;
 import com.library.library.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,6 +26,10 @@ public class StudentController {
     @GetMapping
     public List<Student> getAllStudents() {
         return studentService.getAllStudents();
+    }
+    @GetMapping("/total-students")
+    public int getNumberOfStudents() {
+        return studentService.getNumberOfStudents();
     }
 
     @PostMapping

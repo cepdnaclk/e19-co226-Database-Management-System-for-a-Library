@@ -26,30 +26,30 @@ public class CategoryController {
 		return categoryService.getAll();
 	}
 
+	@GetMapping("/total-categories")
+	public int getNumberOfCategories() {
+		return categoryService.numberOfCategories();
+	}
 	@PostMapping
 	public ResponseEntity<Category> addCategory(@RequestBody Category category) {
 		Category savedCategory = categoryService.addNew(category);
 		return ResponseEntity.status(HttpStatus.CREATED).body(savedCategory);
 	}
 
-//	@PutMapping("/{id}")
-//	public ResponseEntity<Category> updateCategory(@PathVariable Long id, @RequestBody Category category) {
-//		Category existingCategory = categoryService.getCategoryById(id);
-//		if (existingCategory == null) {
-//			return ResponseEntity.notFound().build();
-//		}
-//		Category updatedCategory = categoryService.save(category);
-//		return ResponseEntity.ok(updatedCategory);
-//	}
+	@PutMapping
+	public ResponseEntity<Category> updateCategory(@RequestBody Category category) {
+		Category updatedCategory = categoryService.save(category);
+		return ResponseEntity.ok(updatedCategory);
+	}
 
-//	@DeleteMapping("/{id}")
-//	public ResponseEntity<Long> deleteCategory(@PathVariable Long id) {
-//		Category existingCategory = categoryService.getCategoryById(id);
-//		if (existingCategory == null) {
-//			return ResponseEntity.notFound().build();
-//		}
-//		categoryService.delete(id);
-//		return new ResponseEntity<>(id, HttpStatus.OK);
-//	}
+	@DeleteMapping("/{id}")
+	public ResponseEntity<Long> deleteCategory(@PathVariable Long id) {
+		Category existingCategory = categoryService.get(id);
+		if (existingCategory == null) {
+			return ResponseEntity.notFound().build();
+		}
+		categoryService.delete(id);
+		return new ResponseEntity<>(id, HttpStatus.OK);
+	}
 }
 

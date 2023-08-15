@@ -40,6 +40,11 @@ public class IssueController {
 		return issueRepository.findAll();
 	}
 
+	@GetMapping("/total-issues")
+	public int getNumberOfIssues() {
+		return (int)issueRepository.count();
+	}
+
 	@PostMapping
 	public ResponseEntity<Issue> createIssue(@RequestBody Map<String, String> payload) {
 		String a=payload.get("issueDate");
