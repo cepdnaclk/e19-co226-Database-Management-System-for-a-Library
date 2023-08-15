@@ -13,28 +13,46 @@ export default class BooksTable extends React.Component{
             bookAuthor:"",
             publisherName:"",
             category:"",
-            bookId:0
+            bookId:0,
+            categories: [] 
         }
     }
     
     refreshList() {
         const storedToken = JSON.parse(localStorage.getItem('token'));
-        fetch(variables.API_URL+'books', {
+        fetch(variables.API_URL + 'books', {
             headers: {
-                'Authorization': `Bearer ${storedToken}` // Include the token in the headers
+                'Authorization': `Bearer ${storedToken}`
             }
         })
-        .then(response=>response.json())
-        .then(data=>{this.setState({books:data});
-        }).catch(error => {
+        .then(response => response.json())
+        .then(data => {
+            this.setState({ books: data });
+        })
+        .catch(error => {
             console.error('Error fetching books:', error);
-            // You can display an error message to the user if needed
         });
     }
 
-    componentDidMount()
-    {
+    fetchCategories() {
+        const storedToken = JSON.parse(localStorage.getItem('token'));
+        fetch(variables.API_URL + 'categories', {
+            headers: {
+                'Authorization': `Bearer ${storedToken}`
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            this.setState({ categories: data });
+        })
+        .catch(error => {
+            console.error('Error fetching categories:', error);
+        });
+    }
+
+    componentDidMount() {
         this.refreshList();
+        this.fetchCategories();
     }
 
     changeTitle = (e)=>{
@@ -89,11 +107,11 @@ export default class BooksTable extends React.Component{
 
     createClick(){
         const storedToken = JSON.parse(localStorage.getItem('token'));
-        if (!this.state.bookId||!this.state.bookTitle || !this.state.bookEdition || !this.state.bookAuthor || !this.state.publisherName || !this.state.category) {
+        if (!this.state.bookId||!this.state.bookTitle || !this.state.bookEdition || !this.state.bookAuthor || !this.state.publisherName) {
             alert('Please fill in all required fields.');
             return;
           }
-        fetch(variables.API_URL+'books',{
+        fetch(variables.API_URL+ `books/category/${this.state.category}`,{
             method:'POST',
             headers:{
                 'Accept':'application/json',
@@ -105,8 +123,7 @@ export default class BooksTable extends React.Component{
                 bookTitle:this.state.bookTitle,
                 bookEdition:this.state.bookEdition,
                 bookAuthor:this.state.bookAuthor,
-                publisherName:this.state.publisherName,
-                category:this.state.category
+                publisherName:this.state.publisherName
             })
         })
         .then(response => {
@@ -130,8 +147,8 @@ export default class BooksTable extends React.Component{
 
     updateClick(){
         const storedToken = JSON.parse(localStorage.getItem('token'));
-        fetch(variables.API_URL+'books',{
-            method:'PUT',
+        fetch(variables.API_URL+ `books/category/${this.state.category}`,{
+            method:'POST',
             headers:{
                 'Accept':'application/json',
                 'Content-Type':'application/json',
@@ -142,8 +159,7 @@ export default class BooksTable extends React.Component{
                 bookTitle:this.state.bookTitle,
                 bookEdition:this.state.bookEdition,
                 bookAuthor:this.state.bookAuthor,
-                publisherName:this.state.publisherName,
-                category:this.state.category
+                publisherName:this.state.publisherName
             })
         })
         .then(response => {
@@ -200,7 +216,8 @@ export default class BooksTable extends React.Component{
             bookEdition,
             bookAuthor,
             publisherName,
-            category
+            category,
+            categories
         } = this.state;
 
         return(
@@ -235,7 +252,7 @@ export default class BooksTable extends React.Component{
                                     <td>{cs.bookEdition}</td>
                                     <td>{cs.bookAuthor}</td>
                                     <td>{cs.publisherName}</td>
-                                    <td>{cs.category}</td>
+                                    <td>{cs.category.name}</td>
                                     <td>
                                     <button type="button"
                                             className="btn btn-light mr-1"
@@ -299,7 +316,18 @@ export default class BooksTable extends React.Component{
                                 </div>
                                 <div className="input-group mb-3">
                                     <span className="input-group-text">Category</span>
-                                    <input type="text" className="form-control" value={category} onChange={this.changeCategory}/>
+                                    <select
+                                        className="form-control"
+                                        value={category}
+                                        onChange={this.changeCategory}
+                                    >
+                                        <option value="">Select a category</option>
+                                        {categories.map(cat => (
+                                            <option key={cat.categoryId} value={cat.categoryId}>
+                                                {cat.name}
+                                            </option>
+                                        ))}
+                                    </select>
                                 </div>
 
 

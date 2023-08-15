@@ -3,6 +3,7 @@ package com.library.library.controller;
 import com.library.library.model.Book;
 import com.library.library.model.Category;
 import com.library.library.model.Student;
+import com.library.library.repository.CategoryRepository;
 import com.library.library.service.BookService;
 import com.library.library.service.CategoryService;
 import com.library.library.service.StudentService;
@@ -26,16 +27,24 @@ public class BookController {
 	@Autowired
 	private BookService bookService;
 
+	@Autowired
+	private CategoryRepository categoryRepository;
+
 	@GetMapping
 	public List<Book> getAllBooks() {
 		return bookService.getAll();
 	}
 
 
-	@PostMapping
-	public ResponseEntity<Book> addBook(@RequestBody Book book) {
+
+	@PostMapping("/category/{categoryId}")
+	public ResponseEntity<Long> addBook(@PathVariable Long categoryId, @RequestBody Book book) {
+
+		book.setCategory(categoryRepository.getReferenceById(categoryId));
+		System.out.println(book.getCategory().getCategoryId());
+
 		Book savedBook = bookService.save(book);
-		return ResponseEntity.status(HttpStatus.CREATED).body(savedBook);
+		return new ResponseEntity(categoryId,HttpStatus.OK);
 	}
 
 	@PutMapping("/{id}")

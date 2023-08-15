@@ -27,19 +27,17 @@ public class Issue implements Serializable {
 	
 	@Column(name = "notes")
 	private String notes;
-	
+
 	@Column(name = "expected_return_date")
 	private String expectedReturnDate;
 	
 	@Column(name = "returned")
 	private String status;
-
-//	@JsonIgnore
+	@NotNull
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "nic")
 	private Student student;
-
-//	@JsonIgnore
+	@NotNull
 	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "bookId")
 	private Book book;

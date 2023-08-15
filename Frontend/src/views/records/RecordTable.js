@@ -9,16 +9,16 @@ export default class RecordsTable extends React.Component{
             records:[],
             students:[],
             books:[],
-            users:[],
+            categories:[],
             bookTitle:"",
             role:"",
             issueDate:"",
             expectedReturnDate:"",
             status:"",
-            userName:"",
+            name:"",
             notes:"",
             issueId:0,
-            userId:0,
+            categoryId:"",
             nic:0,
             bookId:0
         }
@@ -42,14 +42,18 @@ export default class RecordsTable extends React.Component{
         .then(response=>response.json())
         .then(data=>{this.setState({students:data});
         });
-        // fetch(variables.API_URL+'api/test/user', {
-        //     headers: {
-        //         'Authorization': `Bearer ${storedToken}` // Include the token in the headers
-        //     }
-        // })
-        // .then(response=>response.json())
-        // .then(data=>{this.setState({users:data});
-        // });
+        fetch(variables.API_URL + 'categories', {
+            headers: {
+                'Authorization': `Bearer ${storedToken}`
+            }
+        })
+            .then(response => response.json())
+            .then(data => {
+                this.setState({ categories: data });
+            })
+            .catch(error => {
+                console.error('Error fetching categories:', error);
+            });
         fetch(variables.API_URL+'books', {
             headers: {
                 'Authorization': `Bearer ${storedToken}` // Include the token in the headers
@@ -81,7 +85,7 @@ export default class RecordsTable extends React.Component{
         this.setState({nic:e.target.value});
     }
     changeUserId = (e)=>{
-        this.setState({userId:e.target.value});
+        this.setState({categoryId:e.target.value});
     }
     changeBookId = (e)=>{
         this.setState({bookId:e.target.value});
@@ -96,7 +100,7 @@ export default class RecordsTable extends React.Component{
             issueDate:"",
             expectedReturnDate:"",
             status:"",
-            userName:"",
+            name:"",
             notes:""
         });
     }
@@ -111,10 +115,10 @@ export default class RecordsTable extends React.Component{
             notes:cs.notes,
             bookTitle:cs.bookTitle,
             role:cs.role,
-            userName:cs.userName,
+            name:cs.name,
             bookId:cs.bookId,
             nic:cs.nic,
-            userId:cs.userId,
+            categoryId:cs.categoryId,
         });
     }
 
@@ -172,7 +176,7 @@ export default class RecordsTable extends React.Component{
                 bookId:this.state.bookId,
                 nic:this.state.nic,
                 // role:this.state.role,
-                // userName:this.state.userName,
+                // name:this.state.name,
 
             })
         })
@@ -233,18 +237,18 @@ export default class RecordsTable extends React.Component{
             students,
             modalTitle,
             books,
-            users,
+            categories,
             bookTitle,
             role,
             issueDate,
             expectedReturnDate,
             status,
-            userName,
+            name,
             notes,
             issueId,
             nic,
             bookId,
-            userId,
+            categoryId,
         } = this.state;
 
         return(
@@ -311,9 +315,6 @@ export default class RecordsTable extends React.Component{
                             )
                         }
                     </tbody>
-                    <caption>
-                        List of Orders
-                    </caption>
                 </table>
                 </div>
       
@@ -331,26 +332,47 @@ export default class RecordsTable extends React.Component{
 
                                 <span className="input-group-text col">Book</span>
                                 {/* <BookSearch books={books} /> */}
-                                <select value={bookId} onChange={this.changeBookId}  class="form-select" aria-label="Default select example">
-                                <option selected>{bookTitle}</option>
-                                {books.map(br => (
-                                    <option value={br.bookId}>{br.bookTitle}</option>
-                                ))}
+                                <select
+                                    value={bookId}
+                                    onChange={this.changeBookId}
+                                    className="form-select"
+                                    aria-label="Default select example"
+                                >
+                                    <option value="" disabled>Select a book</option>
+                                    {books.map(br => {
+                                        var logic=1;
+                                        if (br.category.categoryId == categoryId) { // Filter books by category ID
+                                            records.map(cr=>{if(cr.book.bookId==br.bookId & cr.status=="Not Returned"){
+                                                // alert(br.bookTitle+" in");
+                                                logic=0;
+                                            }});
+                                            if(logic==1){
+                                            return (
+                                                <option key={br.bookId} value={br.bookId}>
+                                                    {br.bookTitle}
+                                                </option>
+                                            );
+                                            }
+                                        }
+                                        return null; // Skip books that don't match the category ID
+                                    
+                                    })}
                                 </select>
 
+
                                 <span className="input-group-text ml-2 col">NIC</span>
-                                <select value={nic} onChange={this.changeStudentId} class="form-select" aria-label="Default select example">
+                                <select value={nic}  onChange={this.changeStudentId} class="form-select" aria-label="Default select example">
                                 <option selected>{role}</option>
                                 {students.map(rm => (
                                     <option value={rm.nic}>{rm.nic}</option>
                                 ))}
                                 </select>
 
-                                <span className="input-group-text ml-2 col">User</span>
-                                <select value={userId} onChange={this.changeUserId} class="form-select" aria-label="Default select example">
-                                <option selected>{userName}</option>
-                                {users.map(rm => (
-                                    <option value={rm.userId}>{rm.userName}</option>
+                                <span className="input-group-text ml-2 col">categories</span>
+                                <select value={categoryId} onChange={this.changeUserId} class="form-select" aria-label="Default select example">
+                                <option selected>{name}</option>
+                                {categories.map(rm => (
+                                    <option value={rm.categoryId}>{rm.name}</option>
                                 ))}
                                 </select>
 
@@ -360,16 +382,16 @@ export default class RecordsTable extends React.Component{
 
                                 <div className="input-group mb-3">
                                     <span className="input-group-text">Borrow Date</span>
-                                    <input id='bd' type="date" className="form-control" value={issueDate} onChange={this.changeBorrowDate}/>
+                                    <input id='bd' type="date" className="form-control"  value={issueDate} onChange={this.changeBorrowDate}/>
                                 </div>
                                 <div className="input-group mb-3">
                                     <span className="input-group-text">Due Date</span>
-                                    <input type="date" className="form-control" value={expectedReturnDate} onChange={this.changeDueDate}/>
+                                    <input type="date" className="form-control"  value={expectedReturnDate} onChange={this.changeDueDate}/>
                                 </div>
 
                                 <div className="input-group mb-3">
                                     <span className="input-group-text">Status</span>
-                                    <select className="form-control" value={status} onChange={this.changeStatus}>
+                                    <select className="form-control" value={status}  onChange={this.changeStatus}>
                                         <option selected></option>
                                         <option value="Not Returned">Not Returned</option>
                                         <option value="Returned">Returned</option>
@@ -401,3 +423,53 @@ export default class RecordsTable extends React.Component{
         )
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

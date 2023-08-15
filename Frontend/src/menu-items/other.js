@@ -28,6 +28,14 @@ const other = {
             breadcrumbs: false
         },
         {
+            id: 'Category',
+            title: 'Category',
+            type: 'item',
+            url: '/category',
+            icon: icons.IconBook,
+            breadcrumbs: false
+        },
+        {
             id: 'Students',
             title: 'Members',
             type: 'item',

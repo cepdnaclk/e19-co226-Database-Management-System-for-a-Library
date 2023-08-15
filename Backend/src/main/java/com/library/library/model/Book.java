@@ -40,14 +40,13 @@ public class Book implements Serializable {
 	
 	@Column(name = "publisherName")
 	private String publisherName;
-	
-//	@JsonIgnore
-//	@ManyToOne
-//	@JoinColumn(name = "category_id")
-////	@NotNull(message = "*Please select category")
-	private String category;
 
-	public Book(Long bookId, String bookTitle, String bookEdition, String bookAuthor, String publisherName, String category) {
+	@ManyToOne(fetch= FetchType.EAGER )
+	@JoinColumn()
+////	@NotNull(message = "*Please select category")
+	private Category category;
+
+	public Book(Long bookId, String bookTitle, String bookEdition, String bookAuthor, String publisherName, Category category) {
 		this.bookId = bookId;
 		this.bookTitle = bookTitle;
 		this.bookEdition = bookEdition;
@@ -100,11 +99,11 @@ public class Book implements Serializable {
 		this.publisherName = publisher;
 	}
 
-	public String getCategory() {
+	public Category getCategory() {
 		return category;
 	}
 
-	public void setCategory(String category) {
+	public void setCategory(Category category) {
 		this.category = category;
 	}
 
