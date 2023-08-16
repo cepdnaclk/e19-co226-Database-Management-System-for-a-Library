@@ -1,21 +1,21 @@
-import React from 'react';
-import { Button } from '@mui/material';
+import React, { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-const Logout = ({ onLogout }) => {
-    const handleLogout = () => {
-        // Call the onLogout function passed from the parent component
-        if (typeof onLogout === 'function') {
-            onLogout();
-        }
-    };
+const Logout = ({ removeToken }) => {
+    const navigate = useNavigate();
 
-    return (
-        <Button variant="outlined" color="secondary" onClick={handleLogout}>
-            Logout
-        </Button>
-    );
+    useEffect(() => {
+        const handleLogout = () => {
+            removeToken();
+            navigate('/');
+            window.location.reload();
+        };
+
+        handleLogout(); // Call the logout function when the component mounts
+    }, []);
+
+    // Since there is no button or JSX to render, you can return `null`
+    return null;
 };
 
 export default Logout;
-
-

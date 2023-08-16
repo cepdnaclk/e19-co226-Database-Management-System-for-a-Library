@@ -60,7 +60,7 @@ const MainRoutes = {
 };
 
 
-export default function ThemeRoutes() {
+export default function ThemeRoutes(props) {
     return useRoutes([ {
         path: '/',
         element:<MainLayout />,
@@ -100,7 +100,7 @@ export default function ThemeRoutes() {
             },
             {
                 path:'Logout',
-                element:<Logout  />
+                element:<Logout removeToken={props.removeToken}  />
             }
         ]
     }]);

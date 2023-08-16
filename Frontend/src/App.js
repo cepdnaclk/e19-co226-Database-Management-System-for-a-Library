@@ -32,13 +32,14 @@ const App = () => {
             localStorage.removeItem('token');
         }
     }, [token]);
+    
 
     return (
         <StyledEngineProvider injectFirst>
             <ThemeProvider theme={themes(customization)}>
                 <CssBaseline />
                 <NavigationScroll>
-                            {!token ?<LoginRoutes setToken={setToken}/>:<MainRoutes />}
+                            {!token ?<LoginRoutes setToken={setToken}/>:<MainRoutes removeToken={removeToken} />}
                 </NavigationScroll>
             </ThemeProvider>
         </StyledEngineProvider>
